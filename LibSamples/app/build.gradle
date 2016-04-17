@@ -28,11 +28,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
 
     // maven dependencies -> comment out when using project dependency
-    compile 'com.github.tsoliveira.android:floatlabeledittext:0.1.0-beta.1'
-    //compile 'com.github.tsoliveira.android:bottomsheetview:0.1.0-beta.4'
+    // compile 'com.github.tsoliveira.android:floatlabeledittext:0.1.0-beta.3'
+    // compile 'com.github.tsoliveira.android:bottomsheetview:0.1.0-beta.4'
 
     // project dependencies -> comment out when using maven dependency
-    // compile project(':floatlabeledittext')
-    // compile project(':bottomsheetview')
+    compile project(':floatlabeledittext')
+    compile project(':bottomsheetview')
 
 }
