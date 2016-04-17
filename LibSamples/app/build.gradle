@@ -26,13 +26,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
-
-    // maven dependencies -> comment out when using project dependency
-//     compile 'com.github.tsoliveira.android:floatlabeledittext:0.1.0-beta.1'
-    // compile 'com.github.tsoliveira.android:bottomsheetview:0.1.0-beta.4'
-
-    // project dependencies -> comment out when using maven dependency
-//    compile project(':floatlabeledittext')
-//    compile project(':bottomsheetview')
-
+    compile 'com.android.support:design:23.3.0'
 }
