@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LibSamples.iml" filepath="$PROJECT_DIR$/LibSamples.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bottomsheetview/bottomsheetview.iml" filepath="$PROJECT_DIR$/bottomsheetview/bottomsheetview.iml" />
       <module fileurl="file://$PROJECT_DIR$/floatlabeledittext/floatlabeledittext.iml" filepath="$PROJECT_DIR$/floatlabeledittext/floatlabeledittext.iml" />
     </modules>
   </component>
