@@ -1,4 +1,4 @@
-package com.supernova.android.renderersample.Renderers;
+package com.supernova.android.renderersample.renderers;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,19 +6,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.pedrogomez.renderers.Renderer;
-import com.supernova.android.renderersample.Model.Video;
 import com.supernova.android.renderersample.R;
+import com.supernova.android.renderersample.models.renderers.Banner;
+import com.supernova.android.renderersample.models.renderers.Video;
 
 /**
  * Created by Thiago on 4/21/2016.
  */
-public class SampleRenderer extends Renderer<Video> {
+public class BannerRenderer extends Renderer<Banner> {
 
     TextView mTextView;
 
     @Override
     protected View inflate(LayoutInflater inflater, ViewGroup parent) {
-        View inflatedView = inflater.inflate(R.layout.video_renderer, parent, false);
+        View inflatedView = inflater.inflate(R.layout.banner_renderer, parent, false);
         return inflatedView;
     }
 
@@ -28,7 +29,7 @@ public class SampleRenderer extends Renderer<Video> {
      * Maps all the view elements from the xml declaration to members of this renderer.
      */
     @Override protected void setUpView(View rootView) {
-        mTextView = (TextView) rootView.findViewById(R.id.renderer_text_view);
+        mTextView = (TextView) rootView.findViewById(R.id.banner_renderer_text_view);
     }
 
     /**
@@ -42,11 +43,11 @@ public class SampleRenderer extends Renderer<Video> {
 
     @Override
     public void render() {
-        Video video = getContent();
-        renderTitle(video);
+        Banner banner = getContent();
+        renderTitle(banner);
     }
 
-    private void renderTitle(Video video) {
-        mTextView.setText(video.getTitle());
+    private void renderTitle(Banner banner) {
+        mTextView.setText(banner.getTitle());
     }
 }

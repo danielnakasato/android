@@ -1,4 +1,4 @@
-package com.supernova.android.renderersample.Model;
+package com.supernova.android.renderersample.models.renderers;
 
 /**
  * Created by Thiago on 4/21/2016.

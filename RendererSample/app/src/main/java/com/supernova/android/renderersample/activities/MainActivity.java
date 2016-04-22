@@ -2,26 +2,30 @@ package com.supernova.android.renderersample.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.pedrogomez.renderers.AdapteeCollection;
+import com.pedrogomez.renderers.ListAdapteeCollection;
 import com.pedrogomez.renderers.RVRendererAdapter;
 import com.pedrogomez.renderers.Renderer;
-import com.pedrogomez.renderers.RendererAdapter;
 import com.pedrogomez.renderers.RendererBuilder;
-import com.supernova.android.renderersample.Model.Video;
+import com.supernova.android.renderersample.decorators.SpacesItemDecoration;
+import com.supernova.android.renderersample.models.renderers.Banner;
+import com.supernova.android.renderersample.models.renderers.Video;
 import com.supernova.android.renderersample.R;
-import com.supernova.android.renderersample.Renderers.SampleRenderer;
+import com.supernova.android.renderersample.renderers.BannerRenderer;
+import com.supernova.android.renderersample.renderers.VideoRenderer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     RVRendererAdapter<Video> mAdapter;
-    ArrayList<Video> mSourceData;
+    ListAdapteeCollection mListAdapteeCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,74 +37,53 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Video video = new Video();
-                video.setTitle(String.valueOf(mSourceData.size()));
+                video.setTitle(String.valueOf(mListAdapteeCollection.size()));
                 mAdapter.add(video);
+                mAdapter.notifyItemInserted(mListAdapteeCollection.indexOf(video));
             }
         });
         findViewById(R.id.fab_remove).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.remove(mSourceData.get(0));
+                int toBeRemovedIndex = getRandom(0, mListAdapteeCollection.size() - 1);
+                mAdapter.notifyItemRemoved(toBeRemovedIndex);
+                mAdapter.remove(mListAdapteeCollection.get(toBeRemovedIndex));
             }
         });
 
         // build mock data
-        mSourceData = new ArrayList<>();
+        mListAdapteeCollection = new ListAdapteeCollection();
         for (int i = 0; i < 10; i++) {
-            Video video = new Video();
-            video.setTitle(String.valueOf(i));
-            mSourceData.add(video);
+            if (getRandom(0, 1) == 0) {
+                Video video = new Video();
+                video.setTitle(String.valueOf(i));
+                mListAdapteeCollection.add(video);
+            } else {
+                Banner banner = new Banner();
+                banner.setTitle("BANNER");
+                mListAdapteeCollection.add(banner);
+            }
         }
-        AdapteeCollection<Video> adapteeCollection = new AdapteeCollection<Video>() {
-            @Override
-            public int size() {
-                return mSourceData.size();
-            }
-
-            @Override
-            public Video get(int index) {
-                return mSourceData.get(index);
-            }
-
-            @Override
-            public boolean add(Video element) {
-                mSourceData.add(1, element);
-                mAdapter.notifyItemInserted(1);
-                return true;
-            }
-
-            @Override
-            public boolean remove(Object element) {
-                mSourceData.remove(element);
-                mAdapter.notifyItemRemoved(mSourceData.indexOf(element));
-                return true;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends Video> elements) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> elements) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-        };
 
         // init renderer builder
-        Renderer<Video> renderer = new SampleRenderer();
-        RendererBuilder<Video> rendererBuilder = new RendererBuilder<>(renderer);
+        RendererBuilder rendererBuilder = new RendererBuilder()
+                .bind(Video.class, new VideoRenderer())
+                .bind(Banner.class, new BannerRenderer());
 
         // init recycler view
+        SpacesItemDecoration decoration = new SpacesItemDecoration(10);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RVRendererAdapter<>(rendererBuilder,  adapteeCollection);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.addItemDecoration(decoration);
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new RVRendererAdapter(rendererBuilder,  mListAdapteeCollection);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private int getRandom(int min, int max) {
+        Random r = new Random();
+        return r.nextInt(max - min + 1) + min;
     }
 
 
