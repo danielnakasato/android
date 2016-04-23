@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.pedrogomez.renderers.AdapteeCollection;
 import com.pedrogomez.renderers.ListAdapteeCollection;
@@ -81,7 +82,13 @@ public class MainActivity extends AppCompatActivity {
 
         // init renderer builder
         RendererBuilder rendererBuilder = new RendererBuilder()
-                .bind(Video.class, new VideoRenderer())
+                .bind(Video.class, new VideoRenderer(new VideoRenderer.VideoRendererListener() {
+                    @Override
+                    public void onLabelClick() {
+                        Toast.makeText(MainActivity.this, "Video Label Click", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                }))
                 .bind(Banner.class, new BannerRenderer());
 
         // init recycler view

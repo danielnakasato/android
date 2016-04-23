@@ -15,6 +15,16 @@ import com.supernova.android.renderersample.R;
 public class VideoRenderer extends Renderer<Video> {
 
     TextView mTextView;
+    VideoRendererListener mListener;
+
+    public VideoRenderer() {
+        super();
+    }
+
+    public VideoRenderer(VideoRendererListener listener) {
+        super();
+        mListener = listener;
+    }
 
     @Override
     protected View inflate(LayoutInflater inflater, ViewGroup parent) {
@@ -38,6 +48,14 @@ public class VideoRenderer extends Renderer<Video> {
         /*
          * Empty implementation substituted with the usage of ButterKnife library by Jake Wharton.
          */
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onLabelClick();
+                }
+            }
+        });
     }
 
     @Override
@@ -48,5 +66,9 @@ public class VideoRenderer extends Renderer<Video> {
 
     private void renderTitle(Video video) {
         mTextView.setText(video.getTitle());
+    }
+
+    public interface VideoRendererListener {
+        void onLabelClick();
     }
 }
