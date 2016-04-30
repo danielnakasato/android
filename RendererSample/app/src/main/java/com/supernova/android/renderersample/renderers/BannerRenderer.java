@@ -1,6 +1,11 @@
 package com.supernova.android.renderersample.renderers;
 
+import android.support.v4.view.MotionEventCompat;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -8,7 +13,6 @@ import android.widget.TextView;
 import com.pedrogomez.renderers.Renderer;
 import com.supernova.android.renderersample.R;
 import com.supernova.android.renderersample.models.renderers.Banner;
-import com.supernova.android.renderersample.models.renderers.Video;
 
 /**
  * Created by Thiago on 4/21/2016.

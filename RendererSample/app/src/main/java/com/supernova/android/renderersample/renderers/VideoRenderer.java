@@ -17,10 +17,6 @@ public class VideoRenderer extends Renderer<Video> {
     TextView mTextView;
     VideoRendererListener mListener;
 
-    public VideoRenderer() {
-        super();
-    }
-
     public VideoRenderer(VideoRendererListener listener) {
         super();
         mListener = listener;

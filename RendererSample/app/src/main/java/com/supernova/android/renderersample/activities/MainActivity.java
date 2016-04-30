@@ -1,19 +1,18 @@
 package com.supernova.android.renderersample.activities;
 
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.pedrogomez.renderers.AdapteeCollection;
 import com.pedrogomez.renderers.ListAdapteeCollection;
 import com.pedrogomez.renderers.RVRendererAdapter;
-import com.pedrogomez.renderers.Renderer;
 import com.pedrogomez.renderers.RendererBuilder;
+import com.pedrogomez.renderers.RendererViewHolder;
 import com.supernova.android.renderersample.decorators.SpacesItemDecoration;
 import com.supernova.android.renderersample.models.renderers.Banner;
 import com.supernova.android.renderersample.models.renderers.Video;
@@ -21,15 +20,14 @@ import com.supernova.android.renderersample.R;
 import com.supernova.android.renderersample.renderers.BannerRenderer;
 import com.supernova.android.renderersample.renderers.VideoRenderer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     RVRendererAdapter<Video> mAdapter;
     ListAdapteeCollection mListAdapteeCollection;
+    ItemTouchHelper mItemTouchHelper;
+    ItemTouchHelper.Callback mItemTouchCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // init renderer builder
-        RendererBuilder rendererBuilder = new RendererBuilder()
+        final RendererBuilder rendererBuilder = new RendererBuilder()
                 .bind(Video.class, new VideoRenderer(new VideoRenderer.VideoRendererListener() {
                     @Override
                     public void onLabelClick() {
@@ -96,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         SpacesItemDecoration decoration = new SpacesItemDecoration(10);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -112,9 +111,50 @@ public class MainActivity extends AppCompatActivity {
         });
         recyclerView.addItemDecoration(decoration);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new RVRendererAdapter(rendererBuilder,  mListAdapteeCollection);
+        mAdapter = new RVRendererAdapter(rendererBuilder, mListAdapteeCollection);
         recyclerView.setAdapter(mAdapter);
+
+        // View swipe
+        mItemTouchCallback = new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView,
+                                        RecyclerView.ViewHolder viewHolder) {
+                RendererViewHolder rendererViewHolder = (RendererViewHolder) viewHolder;
+
+                if (rendererViewHolder.getRenderer().getClass() == BannerRenderer.class) {
+                    return 0;
+                } else {
+                    int swipeFlags;
+                    float aViewHolderitemViewX = viewHolder.itemView.getX();
+
+                    if (aViewHolderitemViewX <= viewHolder.itemView.getWidth()) {
+                        swipeFlags = ItemTouchHelper.START;
+                    } else {
+                        swipeFlags = ItemTouchHelper.END;
+                    }
+
+                    return makeMovementFlags(0, swipeFlags);
+                }
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int viewHolderAdapterPosition = viewHolder.getAdapterPosition();
+
+                mListAdapteeCollection.remove(viewHolderAdapterPosition);
+                mAdapter.notifyItemRemoved(viewHolderAdapterPosition);
+            }
+        };
+        mItemTouchHelper = new ItemTouchHelper(mItemTouchCallback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
+
 
     private int getRandom(int min, int max) {
         Random r = new Random();
