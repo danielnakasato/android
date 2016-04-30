@@ -1,5 +1,7 @@
 package com.supernova.android.renderersample.renderers;
 
+import android.animation.StateListAnimator;
+import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
